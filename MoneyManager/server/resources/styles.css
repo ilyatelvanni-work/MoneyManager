@@ -1,0 +1,189 @@
+body {
+    background-color: #666;
+    color: #BBC;
+    display: flex;
+}
+
+#add_expense_button {
+    width: 50px;
+    height: 50px;
+    background-color: #00A;
+    text-align: center;
+    vertical-align: middle;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font: 30px bold;
+    cursor: pointer;
+}
+
+#expense_subcategory option {
+    display: None;
+}
+
+#expense_subcategory option.selectable {
+    display: inline;
+}
+
+
+
+/*
+#main_menu {
+    min-width: 150px;
+    background-color: #5555AA;
+}
+
+#main_menu>ul {
+    list-style-type: none;
+    padding: 10px;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#main_menu>ul li.main_menu_option>button {
+    padding: 10px;
+    font-size: 20px;
+    background-color: #0000CC;
+    border: 0px;
+}
+
+#main_menu>ul li.main_menu_option.mode_on>button {
+    background-color: #000033;
+    color: #FFFFFF;
+}*/
+
+/*
+.character {
+    background-color: #CCCCFF;
+    border: 2px solid #CCCCCC;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.character span[name="character_id"], .character span[name="character_satiety_decreasing_coef"],
+.character span[name="character_hydration_decreasing_coef"], .character span[name="character_datetime"] {
+    display: none;
+}
+*/
+
+
+
+
+
+
+
+
+
+/*
+
+
+ul.chain_of_messages {
+    list-style-type: none;
+    padding: 10px;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+ul.chain_of_messages li.message {
+    display: flex;
+    background-color: #333333;
+    padding: 10px;
+    border: 2px solid #000000;
+    margin: 10px;
+    color: #88EE88;
+}
+
+ul.chain_of_messages li.selected_for_merge {
+    background-color: #9999FF;
+}
+
+ul.chain_of_messages li.user_message {
+    background-color: #000044;
+    color: #FFFFBB;
+    margin-left: 40px;
+}
+
+ul.chain_of_messages li.message div.message_text {
+    margin: 15px 5px 5px 5px;
+    font-size: 18px;
+}
+
+ul.chain_of_messages li.selected_for_merge div.message_text {
+    color: #FFFF99;
+}*/
+/*
+ul.chain_of_messages li.message>div.metadata>span.message_id::before {
+    content: "MSG_ID: ";
+    display: inline;
+}
+
+ul.chain_of_messages li.message>div.metadata>span.message_id {
+    display: inline-block;
+    width: 100px;
+}
+
+ul.chain_of_messages li.message>div.metadata>span.message_character_id::before {
+    content: "CHARACTER_ID: ";
+    display: inline;
+}
+
+ul.chain_of_messages li.message>div.metadata>span.message_character_id {
+    display: inline-block;
+    width: 150px;
+}*/
+/*
+ul.chain_of_messages li.message>div.content>div.metadata {
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+ul.chain_of_messages li.selected_for_merge>div.content>div.metadata {
+    color: #000000;
+}
+
+ul.chain_of_messages li.message>div.content>div.metadata>span.message_id, ul.chain_of_messages li.message>div.content>div.metadata>span.message_character_id {
+    display: None;
+}
+
+ul.chain_of_messages li.message>div.content>div.metadata>span.message_role {
+    display: inline-block;
+    width: 100px;
+    margin-left: 15px;
+    text-transform: uppercase;
+}
+
+ul.chain_of_messages li.message div.merge_checkbox {
+    display: none;
+}
+
+#body_content.merge_message_mod_on ul.chain_of_messages li.message div.merge_checkbox {
+    display: flex;
+}
+
+ul.chain_of_messages li.message div.merge_checkbox>input[type='checkbox'] {
+    width: 20px;
+    border-radius: 10px;
+}
+
+div.message_input_box {
+    margin: 10px;
+    padding: 0 20px ;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+div.message_input_box>textarea.message_textarea {
+    min-height: 80px;
+    width: 90%;
+    margin: 5px;
+    font-size: 18px;
+}
+
+div.message_input_box>button.message_sending_button {
+    padding: 5px 30px;
+    border-radius: 10px;
+    font-size: 20px;
+}*/

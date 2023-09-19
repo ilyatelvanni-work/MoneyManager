@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Money Manager</title>
+    <link rel="stylesheet" href="resources/styles.css">
+</head>
+<body>
+    <button id="add_expense_button">+</button>
+    <form id="add_expense_form" action="/api/transaction" method="POST">
+        <label>Value: 
+            <input type="number" id="expense_value" name="value">
+            <select id="expense_account" name="account_id"></select>
+        </label>
+        <label>Category: <select id="expense_category" name="category_id"></select></label>
+        <label>Subcategory: <select id="expense_subcategory" name="subcategory_id"></select></label>
+        <label for="datetime">Date and time:
+            <input type="datetime-local" id="expense_datetime" name="datetime">
+        </label>
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+<script src="resources/core.js"></script>
+<script src="resources/index.js"></script>
+</html>
