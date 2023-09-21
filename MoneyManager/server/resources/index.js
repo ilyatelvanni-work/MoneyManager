@@ -44,6 +44,35 @@ const SUBCATEGORIES_LIST = [];
 
 (async () => {
 
+    const add_expense_button = document.getElementById('add_expense_button');
+    
+
+    
+
+    (() => {
+        const expense_form_wrapper = document.querySelector('body>div.expense_form_block');
+        let expense_form_is_visible = !expense_form_wrapper.classList.contains('invisible')
+
+        function switch_expense_from_visibility(event) {
+            if (expense_form_is_visible) {
+                expense_form_is_visible = false;
+                expense_form_wrapper.classList.add('invisible');
+            } else {
+                expense_form_is_visible = true;
+                expense_form_wrapper.classList.remove('invisible');
+            }
+
+            event.stopPropagation();
+        }
+
+        add_expense_button.addEventListener('click', switch_expense_from_visibility);
+        expense_form_wrapper.addEventListener('click', switch_expense_from_visibility);
+
+        document.getElementById('add_expense_form').addEventListener('click', function (event) {
+            event.stopPropagation();
+        });
+    })();
+
     const expense_currency = document.getElementById('expense_account');
     const expense_category = document.getElementById('expense_category');
     const expense_subcategory = document.getElementById('expense_subcategory');

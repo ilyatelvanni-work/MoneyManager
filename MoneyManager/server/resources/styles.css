@@ -25,6 +25,56 @@ body {
     display: inline;
 }
 
+body>div.expense_form_block {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    align-items: start;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+body>div.expense_form_block.invisible {
+    display: None;
+}
+
+#add_expense_form {
+    background-color: #AAF;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    color: #FF5;
+    margin-top: 20px;
+}
+
+#add_expense_form label {
+    display: block;
+    margin: 5px 0;
+}
+
+#add_expense_form label span.input_name {
+    display: inline-block;
+    width: 100px;
+}
+
+#add_expense_form label select, #add_expense_form label input {
+    display: inline-block;
+}
+
+#add_expense_form label select {
+    margin: 0 0 0 5px;
+}
+
+#add_expense_form input[type="submit"] {
+    width: 40%;
+    align-self: center;
+    margin-top: 15px;
+    height: 25px;
+    font-weight: bold;
+}
 
 
 /*
