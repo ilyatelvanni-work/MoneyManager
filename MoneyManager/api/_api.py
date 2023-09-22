@@ -33,20 +33,24 @@ class API:
         pass
 
     @prepare_api_response
-    async def get_currency(self):
-        return await Currency.get()
+    async def get_currency(self, *args, **kwargs):
+        return await Currency.get(*args, **kwargs)
 
     @prepare_api_response
-    async def get_category(self):
-        return await Category.get()
+    async def get_category(self, *args, **kwargs):
+        return await Category.get(*args, **kwargs)
 
     @prepare_api_response
-    async def get_account(self):
-        return await Account.get()
+    async def get_account(self, *args, **kwargs):
+        return await Account.get(*args, **kwargs)
 
     @prepare_api_response
     async def create_transaction(self, *args, **kwargs):
         return await Transaction.create(*args, **kwargs)
+
+    @prepare_api_response
+    async def get_transactions(self, *args, **kwargs):
+        return await Transaction.get(*args, **kwargs)
 
 
 

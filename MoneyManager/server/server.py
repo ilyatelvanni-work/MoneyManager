@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import sys
+import urllib
 from pathlib import Path
 
 from aiohttp import web
@@ -90,6 +91,16 @@ async def api_transaction_post_handler(request: web.Request) -> web.Response:
         status=200, content_type='application/json', charset='utf-8', text=await api.create_transaction(**params)
     )
 
+async def api_transaction_get_handler(request: web.Request) -> web.Response:
+
+    query_parameters = urllib.parse.parse_qs(request.query_string)
+
+    return web.Response(
+        status=200, content_type='application/json', charset='utf-8', text=await api.get_transactions(
+            **{key: value[0] for key, value in query_parameters.items()}
+        )
+    )
+
 def init_logging() -> None:
     standart_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
@@ -122,6 +133,7 @@ def main() -> None:
     app.router.add_get('/api/currency', api_currency_get_handler)
     app.router.add_get('/api/category', api_category_get_handler)
     app.router.add_get('/api/account', api_account_get_handler)
+    app.router.add_get('/api/transaction', api_transaction_get_handler)
 
     app.router.add_post('/api/transaction', api_transaction_post_handler)
 

@@ -1,3 +1,9 @@
+const USER_ID = 1;
+const ACCOUNTS = {};
+const CATEGORIES = {};  // {category.id: {category: Category, subcategory.id: {category: Category, ...}}}
+const SUBCATEGORIES_LIST = [];
+
+
 class Account {
     constructor(dict, parent) {
         this.id = Number(dict.id);
@@ -12,6 +18,7 @@ class Account {
         this.html_parent.appendChild(this.html_object);
     }
 }
+
 
 class Category{
     constructor(dict, parent) {
@@ -38,97 +45,163 @@ class Category{
     }
 }
 
-const ACCOUNTS_LIST = [];
-const CATEGORIES_LIST = [];
-const SUBCATEGORIES_LIST = [];
+
+class Transaction {
+    constructor(dict, parent) {
+        this.id = Number(dict.id);
+        this.datetime = new Date(dict.datetime);
+        this.value = Number(dict.value);
+        this.category_id = Number(dict.category_id);
+        this.account_id = Number(dict.account_id);
+        this.subcategory = CATEGORIES[this.category_id].category;
+        this.category = CATEGORIES[this.subcategory.parent_category_id].category;
+
+        this.html_parent = parent;
+        this.html_object = document.createElement('li');
+        this.html_object.setAttribute('transaction_id', this.id);
+
+        this.datetime_html = document.createElement('span');
+        this.datetime_html.classList.add('datetime');
+        this.datetime_html.innerText = this.datetime_to_string(this.datetime);
+        this.value_html = document.createElement('span');
+        this.value_html.classList.add('value');
+        this.value_html.innerText = this.value;
+        this.category_html = document.createElement('span');
+        this.category_html.classList.add('category');
+        this.category_html.innerText = `${this.category.name} - ${this.subcategory.name}`;
+
+        this.html_object.appendChild(this.datetime_html);
+        this.html_object.appendChild(this.value_html);
+        this.html_object.appendChild(this.category_html);
+
+        this.html_parent.appendChild(this.html_object);
+    }
+
+    datetime_to_string(datetime) {
+        const year = datetime.getFullYear();
+        const month = String(datetime.getMonth() + 1).padStart(2, '0');
+        const day = String(datetime.getDate()).padStart(2, '0');
+        const hours = String(datetime.getHours()).padStart(2, '0');
+        const minutes = String(datetime.getMinutes()).padStart(2, '0');
+
+        return `${year}-${month}-${day} ${hours}:${minutes}`
+    }
+}
 
 (async () => {
 
-    const add_expense_button = document.getElementById('add_expense_button');
-    
+    await (async () => {
 
-    
+        const add_expense_button = document.getElementById('add_expense_button');
 
-    (() => {
-        const expense_form_wrapper = document.querySelector('body>div.expense_form_block');
-        let expense_form_is_visible = !expense_form_wrapper.classList.contains('invisible')
+        (() => {
+            const expense_form_wrapper = document.querySelector('body>div.expense_form_block');
+            let expense_form_is_visible = !expense_form_wrapper.classList.contains('invisible')
 
-        function switch_expense_from_visibility(event) {
-            if (expense_form_is_visible) {
-                expense_form_is_visible = false;
-                expense_form_wrapper.classList.add('invisible');
-            } else {
-                expense_form_is_visible = true;
-                expense_form_wrapper.classList.remove('invisible');
+            function switch_expense_from_visibility(event) {
+                if (expense_form_is_visible) {
+                    expense_form_is_visible = false;
+                    expense_form_wrapper.classList.add('invisible');
+                } else {
+                    expense_form_is_visible = true;
+                    expense_form_wrapper.classList.remove('invisible');
+                }
+
+                event.stopPropagation();
             }
 
-            event.stopPropagation();
+            add_expense_button.addEventListener('click', switch_expense_from_visibility);
+            expense_form_wrapper.addEventListener('click', switch_expense_from_visibility);
+
+            document.getElementById('add_expense_form').addEventListener('click', function (event) {
+                event.stopPropagation();
+            });
+        })();
+
+        const expense_currency = document.getElementById('expense_account');
+        const expense_category = document.getElementById('expense_category');
+        const expense_subcategory = document.getElementById('expense_subcategory');
+
+        document.getElementById('expense_datetime').value = new Date().toISOString().slice(0, 16);
+
+        for (let cur of await send_get_request('currency')) {
+            ACCOUNTS[cur.id] = new Account(cur, expense_currency);
         }
 
-        add_expense_button.addEventListener('click', switch_expense_from_visibility);
-        expense_form_wrapper.addEventListener('click', switch_expense_from_visibility);
+        for (let cur of await send_get_request('category')) {
+            if (cur.parent_category_id) {
+                const category = new Category(cur, expense_subcategory);
 
-        document.getElementById('add_expense_form').addEventListener('click', function (event) {
-            event.stopPropagation();
+                SUBCATEGORIES_LIST.push(category);
+
+                if (!CATEGORIES[cur.parent_category_id]) {
+                    CATEGORIES[cur.parent_category_id] = {};
+                }
+
+                CATEGORIES[cur.id] = {category: category};
+                CATEGORIES[cur.parent_category_id][cur.id] = CATEGORIES[cur.id];
+            } else {
+                const category = new Category(cur, expense_category);
+
+                if (!CATEGORIES[cur.id]) {
+                    CATEGORIES[cur.id] = {category: category};
+                } else {
+                    CATEGORIES[cur.id][category] = category;
+                }
+            }
+        }
+
+        // for (let key in CATEGORIES) {
+        //     if (CATEGORIES[key].category.parent_category_id) {
+        //         delete CATEGORIES[key];
+        //     }
+        // }
+
+        function on_select_category() {
+            const category_id = Number(
+                expense_category.options[expense_category.selectedIndex].getAttribute('value')
+            );
+
+            for (let subcategory of SUBCATEGORIES_LIST) {
+                if (subcategory.parent_category_id === category_id) {
+                    subcategory.make_selectable();
+                } else {
+                    subcategory.make_unselectable();
+                }
+            }
+
+            document.querySelector('#expense_subcategory option.selectable').selected = 1;
+        }
+
+        expense_category.addEventListener('change', on_select_category);
+        on_select_category();
+
+        document.getElementById('add_expense_form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const form_data = {};
+
+            (new FormData(this)).forEach(function(value, name) {
+                form_data[name] = value;
+            });
         });
+
     })();
 
-    const expense_currency = document.getElementById('expense_account');
-    const expense_category = document.getElementById('expense_category');
-    const expense_subcategory = document.getElementById('expense_subcategory');
+    await (async () => {
 
-    document.getElementById('expense_datetime').value = new Date().toISOString().slice(0, 16);
+        const last_expenses = document.getElementById('last_expenses_list')
 
-    for (cur of await send_get_request('currency')) {
-        ACCOUNTS_LIST.push(new Account(cur, expense_currency));
-    }
-
-    for (cur of await send_get_request('category')) {
-        if (cur.parent_category_id) {
-            SUBCATEGORIES_LIST.push(new Category(cur, expense_subcategory));
-        } else {
-            CATEGORIES_LIST.push(new Category(cur, expense_category));
-        }
-    }
-
-    function on_select_category() {
-        const category_id = Number(
-            expense_category.options[expense_category.selectedIndex].getAttribute('value')
-        );
-
-        for (subcategory of SUBCATEGORIES_LIST) {
-            if (subcategory.parent_category_id === category_id) {
-                subcategory.make_selectable();
-            } else {
-                subcategory.make_unselectable();
-            }
+        for (let tr of await send_get_request('transaction', {user_id:USER_ID, limit:50})) {
+            new Transaction(tr, last_expenses);
         }
 
-        document.querySelector('#expense_subcategory option.selectable').selected = 1;
-    }
-
-    expense_category.addEventListener('change', on_select_category);
-    on_select_category();
-
-    document.getElementById('add_expense_form').addEventListener('submit', async function(event) {
-        event.preventDefault();
-
-        const form_data = {};
-
-        (new FormData(this)).forEach(function(value, name) {
-            form_data[name] = value;
-        });
-
-        log.debug('!?!?!?');
-
-        log.debug(
-            JSON.stringify(await send_post_request('transaction', form_data))
-        );
-
-    });
-
+    })();
 
 })();
+
+
+
 
 // const DIALOG_ROUTE = 'dialog';
 // const CHARACTER_ID = 1;

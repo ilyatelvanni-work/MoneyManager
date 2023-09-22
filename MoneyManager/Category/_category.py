@@ -17,8 +17,6 @@ class Category(Base, MyBase):
     parent_category_id = sa.Column(sa.Integer, sa.ForeignKey(f'{_CATEGORY_TABLE_NAME}.id'), index=True)
 
     async def get() -> 'Category':
-        categories_tree = {}
-
         async with get_session() as session:
             result = await session.execute(sa.select(Category))
             return result.scalars().all()

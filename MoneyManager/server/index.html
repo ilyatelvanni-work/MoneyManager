@@ -7,7 +7,12 @@
     <link rel="stylesheet" href="resources/styles.css">
 </head>
 <body>
-    <button id="add_expense_button">+</button>
+    <div id="last_expenses_section">
+        <button id="add_expense_button">+</button>
+        <ol id="last_expenses_list">
+            <li></li>
+        </ol>
+    </div>
     <div class="expense_form_block invisible">
         <form id="add_expense_form" action="/api/transaction" method="POST">
             <label><span class="input_name">Value:</span>

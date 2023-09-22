@@ -18,11 +18,6 @@ class Transaction(Base, MyBase):
     category_id = sa.Column(sa.Integer, sa.ForeignKey(f'{Category.__tablename__}.id'), nullable=True, default=False)
     account_id = sa.Column(sa.Integer, sa.ForeignKey(f'{Account.__tablename__}.id'), nullable=True, default=False)
 
-    def __json__(self) -> dict[str, int | str]:
-        dict_ = self.as_dict()
-        dict_['datetime'] = dt.datetime.now().strftime('%Y-%m-%dT%H:%M')
-        return dict_
-
     @staticmethod
     async def create(value: float, account_id: int, category_id: int, subcategory_id: int,
                      datetime: str | dt.datetime | None = None) -> None:
@@ -50,4 +45,8 @@ class Transaction(Base, MyBase):
 
         return transaction
 
-
+    @staticmethod
+    async def get(user_id: int, limit: int | None = None) -> 'Transaction':
+        async with get_session() as session:
+            result = await session.execute(sa.select(Transaction).limit(limit=limit))
+            return result.scalars().all()

@@ -9,13 +9,15 @@ async function send_get_request(route, params) {
         route_with_params = route;
         if (params) {
             let addres_params = '?'
+            
             for (const key in params) {
                 if (params.hasOwnProperty(key)) {
-                    addres_params += `${key}=${params[key]}`;
+                    addres_params += `${key}=${params[key]}&`;
                 }
             }
 
-            route_with_params += addres_params
+            addres_params = addres_params.substring(0, addres_params.length - 1);
+            route_with_params += addres_params;
         }
 
         log.debug(`Sending GET request to localhost:4433/api/${route_with_params}`);
